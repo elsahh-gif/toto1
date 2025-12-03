@@ -3,6 +3,20 @@ import pandas as pd
 import numpy as np
 import io
 from datetime import datetime
+import sys
+
+# Check dependencies
+try:
+    import openpyxl
+except ImportError:
+    st.error("Missing dependency: openpyxl")
+    st.info("Add this to requirements.txt file in your repo:")
+    st.code("""streamlit>=1.28.0
+pandas>=2.0.0
+numpy>=1.24.0
+openpyxl>=3.1.0
+xlsxwriter>=3.1.0""")
+    st.stop()
 
 # Page config
 st.set_page_config(
@@ -76,9 +90,26 @@ if all_files_uploaded:
                     st.session_state.order_list_data[sheet] = pd.read_excel(excel_file, sheet_name=sheet)
                 
                 st.session_state.files_loaded = True
+                st.success("Files loaded successfully!")
+                
+            except ImportError as e:
+                st.error(f"Missing Python package: {str(e)}")
+                st.info("Make sure requirements.txt exists in your repo with:")
+                st.code("""streamlit>=1.28.0
+pandas>=2.0.0
+numpy>=1.24.0
+openpyxl>=3.1.0
+xlsxwriter>=3.1.0""")
+                st.warning("After adding requirements.txt, redeploy the app from Streamlit Cloud dashboard")
                 
             except Exception as e:
                 st.error(f"Error loading files: {str(e)}")
+                st.info("Please check:")
+                st.markdown("""
+                - File format is .xlsx
+                - Files are not corrupted
+                - Files have valid sheets
+                """)
 
 # ============================================================================
 # STEP 2: RUN SCHEDULER
