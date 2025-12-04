@@ -4,6 +4,7 @@ import numpy as np
 import io
 from datetime import datetime
 import sys
+import json
 
 # Check dependencies
 try:
@@ -17,6 +18,10 @@ numpy>=1.24.0
 openpyxl>=3.1.0
 xlsxwriter>=3.1.0""")
     st.stop()
+
+# Set pandas display options to show all rows
+pd.set_option('display.max_rows', None)
+pd.set_option('display.max_columns', None)
 
 # Page config
 st.set_page_config(
@@ -164,8 +169,8 @@ if all_files_uploaded and st.session_state.files_loaded:
                     }),
                     'Table': pd.DataFrame({
                         'Table': ['1AR01', '1AR02', '1AR03'],
-                        'Day 1': [['12149RXA', 100], ['14283BC', 50], ['15695XA', 1000]],
-                        'Day 2': [['12149RXA', 100], ['14283BC', 50], ['15695XA', 1000]],
+                        'Day 1': ['12149RXA:100', '14283BC:50', '15695XA:1000'],
+                        'Day 2': ['12149RXA:100', '14283BC:50', '15695XA:1000'],
                     }),
                     'Table Load': pd.DataFrame({
                         'Table': ['1AR01', '1AR02', '1AR03'],
@@ -179,8 +184,8 @@ if all_files_uploaded and st.session_state.files_loaded:
                     }),
                     'Jig Schedule': pd.DataFrame({
                         'Jig': ['JIG-00001', 'JIG-00002'],
-                        'Day 1': [['08:00-12:00'], ['13:00-17:00']],
-                        'Day 2': [['08:00-12:00'], ['13:00-17:00']],
+                        'Day 1': ['08:00-12:00', '13:00-17:00'],
+                        'Day 2': ['08:00-12:00', '13:00-17:00'],
                     }),
                     'Stock FG': pd.DataFrame({
                         'FG Type': ['12149RXA', '14283BC', '15695XA'],
@@ -216,11 +221,12 @@ if st.session_state.results is not None:
         with tab:
             st.markdown(f"### {sheet_name}")
             
-            # Show data editor
+            # Show data editor with dynamic height to display all rows
             edited_df = st.data_editor(
                 st.session_state.results[sheet_name],
                 use_container_width=True,
                 num_rows="dynamic",
+                height=None,  # Auto height to show all rows
                 key=f"editor_{sheet_name}"
             )
             
