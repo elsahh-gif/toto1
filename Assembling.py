@@ -139,67 +139,156 @@ if all_files_uploaded and st.session_state.files_loaded:
     if st.button("RUN SCHEDULER", type="primary", use_container_width=True):
         with st.spinner("Running scheduler... Please wait..."):
             try:
-                # TODO: Insert full scheduler algorithm here
-                # For now: Create dummy results
+                # =============================================================
+                # TODO: INTEGRATE ASSEMBLING SCHEDULER HERE
+                # =============================================================
+                # Steps to integrate:
+                # 1. Copy all functions from Assembling_Scheduler.py
+                # 2. Load data from st.session_state
+                # 3. Run scheduler algorithm
+                # 4. Store results in st.session_state.results
+                #
+                # For now: Using dummy data with real structure
+                # =============================================================
                 
-                # Simulate processing
+                # Progress tracking
+                progress_bar = st.progress(0)
+                status_text = st.empty()
+                
+                # Step 1: Load input data
+                status_text.text("Loading input data...")
+                progress_bar.progress(10)
+                
+                # Get data from session state
+                input_data = st.session_state.input_data
+                table_setting_data = st.session_state.table_setting_data
+                table_list_data = st.session_state.table_list_data
+                order_list_data = st.session_state.order_list_data
+                
+                # Step 2: Process table setting
+                status_text.text("Processing table settings...")
+                progress_bar.progress(20)
+                
+                # Step 3: Initialize scheduler
+                status_text.text("Initializing scheduler...")
+                progress_bar.progress(30)
+                
+                # Step 4: Run main scheduling algorithm
+                status_text.text("Running scheduling algorithm...")
+                progress_bar.progress(50)
+                
+                # SIMULATE PROCESSING
                 import time
-                time.sleep(2)
+                time.sleep(1)
                 
-                # Create sample results (8 sheets)
-                st.session_state.results = {
-                    'Order Summary': pd.DataFrame({
-                        'FG Type': ['12149RXA', '14283BC', '15695XA'],
-                        'EXPORT/LOCAL': ['EXPORT-01', 'EXPORT-01', 'EXPORT-01'],
-                        'Qty Assy': [648, 120, 7200],
-                        'Order Qty': [648, 120, 7200],
-                        'Stock Qty': [528, 0, 0],
-                        'Cancel Assy Qty': [0, 0, 0],
-                        'Over Production Qty': [0, 0, 0],
-                        'COGM': [250852.75, 86027.96, 24361.99],
-                        'TOTAL COGM': [162552582.0, 10323355.2, 175406328.0]
-                    }),
-                    'FG Calendar': pd.DataFrame({
-                        'FG': ['12149RXA', '14283BC', '15695XA'],
-                        'Day 1': [100, 50, 1000],
-                        'Day 2': [100, 50, 1000],
-                        'Day 3': [100, 0, 1000],
-                        'Day 4': [100, 0, 1000],
-                        'Day 5': [100, 0, 1000]
-                    }),
-                    'Table': pd.DataFrame({
-                        'Table': ['1AR01', '1AR02', '1AR03'],
-                        'Day 1': ['12149RXA:100', '14283BC:50', '15695XA:1000'],
-                        'Day 2': ['12149RXA:100', '14283BC:50', '15695XA:1000'],
-                    }),
-                    'Table Load': pd.DataFrame({
-                        'Table': ['1AR01', '1AR02', '1AR03'],
-                        'Day 1': [0.85, 0.45, 0.95],
-                        'Day 2': [0.85, 0.45, 0.95],
-                    }),
-                    'Table Time': pd.DataFrame({
-                        'Table': ['1AR01', '1AR02', '1AR03'],
-                        'Day 1': ['08:00-16:00', '08:00-14:00', '08:00-17:00'],
-                        'Day 2': ['08:00-16:00', '08:00-14:00', '08:00-17:00'],
-                    }),
-                    'Jig Schedule': pd.DataFrame({
-                        'Jig': ['JIG-00001', 'JIG-00002'],
-                        'Day 1': ['08:00-12:00', '13:00-17:00'],
-                        'Day 2': ['08:00-12:00', '13:00-17:00'],
-                    }),
-                    'Stock FG': pd.DataFrame({
-                        'FG Type': ['12149RXA', '14283BC', '15695XA'],
-                        'Qty': [528, 0, 0]
-                    }),
-                    'Stock Part': pd.DataFrame({
-                        'Part': ['PART001', 'PART002', 'PART003'],
-                        'Day 1': [1000, 2000, 3000],
-                        'Day 2': [900, 1800, 2700],
-                        'Day 3': [800, 1600, 2400]
+                # Step 5: Generate results
+                status_text.text("Generating results...")
+                progress_bar.progress(80)
+                
+                # Create realistic dummy results (matching real calendar.xlsx structure)
+                # Generate more rows to simulate real data
+                
+                # Order Summary (1100+ rows)
+                fg_types = ['12149RXA', '14283BC', '15695XA', 'TC505#W', 'TX471SPN']
+                order_summary_rows = []
+                for i, fg in enumerate(fg_types * 225):  # 1125 rows
+                    order_summary_rows.append({
+                        'FG Type': fg,
+                        'EXPORT/LOCAL': 'EXPORT-01',
+                        'Qty Assy': np.random.randint(0, 1000),
+                        'Order Qty': np.random.randint(100, 8000),
+                        'Stock Qty': np.random.randint(0, 1000),
+                        'Cancel Assy Qty': 0,
+                        'Over Production Qty': 0,
+                        'COGM': np.random.uniform(20000, 300000),
+                        'TOTAL COGM': np.random.uniform(1000000, 200000000)
                     })
+                
+                # FG Calendar (885 rows with 14 days)
+                fg_calendar_rows = []
+                for fg in fg_types * 177:  # 885 rows
+                    row = {'FG': fg}
+                    for day in range(1, 15):
+                        row[f'Day {day}'] = np.random.randint(0, 1000)
+                    fg_calendar_rows.append(row)
+                
+                # Table (73 rows)
+                table_names = [f'{i}AR{j:02d}' for i in range(1, 4) for j in range(1, 25)]
+                table_rows = []
+                for table in table_names[:73]:
+                    row = {'Table': table}
+                    for day in range(1, 15):
+                        # Convert list to string to avoid pyarrow error
+                        items = [[fg_types[i % len(fg_types)], np.random.randint(1, 100)] 
+                                for i in range(np.random.randint(0, 3))]
+                        row[f'Day {day}'] = str(items)
+                    table_rows.append(row)
+                
+                # Table Load (73 rows)
+                table_load_rows = []
+                for table in table_names[:73]:
+                    row = {'Table': table}
+                    for day in range(1, 15):
+                        row[f'Day {day}'] = np.random.uniform(0, 1)
+                    table_load_rows.append(row)
+                
+                # Table Time (73 rows)
+                table_time_rows = []
+                for table in table_names[:73]:
+                    row = {'Table': table}
+                    for day in range(1, 15):
+                        # Convert list to string to avoid pyarrow error
+                        times = [[28800 + i*1000, 54000 + i*1000, fg_types[i % len(fg_types)], 
+                                 np.random.randint(1, 100)] for i in range(np.random.randint(0, 2))]
+                        row[f'Day {day}'] = str(times)
+                    table_time_rows.append(row)
+                
+                # Jig Schedule (946 rows)
+                jig_rows = []
+                for i in range(946):
+                    row = {'Jig': f'JIG-{i+1:05d}'}
+                    for day in range(1, 12):
+                        row[f'Day {day}'] = str([])
+                    jig_rows.append(row)
+                
+                # Stock FG (1117 rows)
+                stock_fg_rows = []
+                for i, fg in enumerate(fg_types * 224):  # 1120 rows
+                    stock_fg_rows.append({
+                        'FG Type': fg,
+                        'Qty': np.random.randint(0, 1000)
+                    })
+                
+                # Stock Part (47 rows)
+                parts = [f'PART{i:03d}' for i in range(47)]
+                stock_part_rows = []
+                for part in parts:
+                    row = {'Part': part}
+                    for day in range(1, 15):
+                        row[f'Day {day}'] = np.random.randint(0, 20000)
+                    stock_part_rows.append(row)
+                
+                # Create DataFrames
+                st.session_state.results = {
+                    'Order Summary': pd.DataFrame(order_summary_rows),
+                    'FG Calendar': pd.DataFrame(fg_calendar_rows),
+                    'Table': pd.DataFrame(table_rows),
+                    'Table Load': pd.DataFrame(table_load_rows),
+                    'Table Time': pd.DataFrame(table_time_rows),
+                    'Jig Schedule': pd.DataFrame(jig_rows),
+                    'Stock FG': pd.DataFrame(stock_fg_rows),
+                    'Stock Part': pd.DataFrame(stock_part_rows)
                 }
                 
-                st.success("Scheduler completed successfully")
+                # Complete
+                status_text.text("Scheduler completed!")
+                progress_bar.progress(100)
+                time.sleep(0.5)
+                status_text.empty()
+                progress_bar.empty()
+                
+                st.success("Scheduler completed successfully!")
+                st.info("NOTE: This is simulated data. To use real scheduler, integrate Assembling_Scheduler.py code at line 142")
                 st.rerun()
                 
             except Exception as e:
