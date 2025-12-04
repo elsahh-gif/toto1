@@ -31,7 +31,7 @@ st.set_page_config(
 )
 
 # Title
-st.title("Production Scheduler")
+st.title("Assembling Scheduler")
 st.markdown("Upload Excel files - Run Scheduler - Edit Results - Download")
 st.markdown("---")
 
@@ -41,9 +41,7 @@ if 'results' not in st.session_state:
 if 'files_loaded' not in st.session_state:
     st.session_state.files_loaded = False
 
-# ============================================================================
 # STEP 1: FILE UPLOAD
-# ============================================================================
 st.header("Step 1: Upload Files")
 
 col1, col2, col3, col4 = st.columns(4)
@@ -368,3 +366,4 @@ st.markdown("""
     <p><strong>Production Scheduler v1.0</strong></p>
 </div>
 """, unsafe_allow_html=True)
+
