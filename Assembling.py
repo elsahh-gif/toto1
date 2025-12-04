@@ -221,12 +221,12 @@ if st.session_state.results is not None:
         with tab:
             st.markdown(f"### {sheet_name}")
             
-            # Show data editor with dynamic height to display all rows
+            # Show data editor with large height to display many rows
             edited_df = st.data_editor(
                 st.session_state.results[sheet_name],
                 use_container_width=True,
                 num_rows="dynamic",
-                height=None,  # Auto height to show all rows
+                height=600,  # Large enough to show many rows
                 key=f"editor_{sheet_name}"
             )
             
